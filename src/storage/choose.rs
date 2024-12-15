@@ -238,6 +238,16 @@ impl StorageBackend<User> for ChoosingVfs {
         path: P,
         start_pos: u64,
     ) -> storage::Result<u64> {
+        if path.as_ref().starts_with("/upload/") == false {
+            return Err(libunftp::storage::Error::new(
+                libunftp::storage::ErrorKind::PermissionDenied,
+                std::io::Error::new(
+                    std::io::ErrorKind::PermissionDenied,
+                    "Sorry, file creation is only allowed in /upload",
+                ),
+            ));
+        }
+        println!("{:?}", path);
         match &self.inner {
             InnerVfs::OpenDAL(i) => i.put(user, input, path, start_pos).await,
             InnerVfs::Cloud(i) => i.put(user, input, path, start_pos).await,
@@ -250,6 +260,13 @@ impl StorageBackend<User> for ChoosingVfs {
         user: &User,
         path: P,
     ) -> storage::Result<()> {
+        return Err(libunftp::storage::Error::new(
+            libunftp::storage::ErrorKind::PermissionDenied,
+            std::io::Error::new(
+                std::io::ErrorKind::PermissionDenied,
+                "Sorry, file deletion is not allowed.",
+            ),
+        ));
         match &self.inner {
             InnerVfs::OpenDAL(i) => i.del(user, path).await,
             InnerVfs::Cloud(i) => i.del(user, path).await,

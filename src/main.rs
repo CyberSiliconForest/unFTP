@@ -549,7 +549,7 @@ where
     });
 
     let mut server = ServerBuilder::with_authenticator(storage_backend, authenticator)
-        .greeting("Welcome to unFTP")
+        .greeting("Happy hacking everyone! ;)")
         .passive_ports(start_port..end_port)
         .idle_session_timeout(idle_timeout)
         .logger(root_log.new(o!("lib" => "libunftp")))
